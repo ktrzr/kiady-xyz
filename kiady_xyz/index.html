@@ -1,0 +1,1384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kiady — Creative Director</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f8f7f4;
+      --fg: #0a0a0a;
+      --accent: #0a0a0a;
+      --muted: #8a8a8a;
+      --border: #e0dedd;
+      --font-display: 'Syne', sans-serif;
+      --font-mono: 'DM Mono', monospace;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--fg);
+      font-family: var(--font-display);
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* CURSOR */
+    .cursor {
+      position: fixed;
+      width: 8px;
+      height: 8px;
+      background: var(--fg);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transition: transform 0.15s ease, width 0.2s ease, height 0.2s ease;
+      transform: translate(-50%, -50%);
+    }
+    .cursor-ring {
+      position: fixed;
+      width: 36px;
+      height: 36px;
+      border: 1px solid var(--fg);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9998;
+      transition: transform 0.4s ease, width 0.3s ease, height 0.3s ease, opacity 0.3s ease;
+      transform: translate(-50%, -50%);
+      opacity: 0.4;
+    }
+    body.hovering .cursor { width: 12px; height: 12px; }
+    body.hovering .cursor-ring { width: 56px; height: 56px; opacity: 0.2; }
+
+    /* PAGES */
+    .page { display: none; min-height: 100vh; }
+    .page.active { display: block; }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 28px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      mix-blend-mode: normal;
+    }
+
+    nav::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 48px;
+      right: 48px;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .nav-logo {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--fg);
+      cursor: pointer;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    nav.on-hero .nav-logo {
+      color: #fff;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 40px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+      cursor: pointer;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--fg);
+    }
+
+    .nav-links a.active {
+      position: relative;
+    }
+
+    .nav-links a.active::after {
+      content: '';
+      position: absolute;
+      bottom: -3px;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: var(--fg);
+    }
+
+    /* ================================
+       HOME PAGE
+    ================================ */
+    #home {
+      padding-top: 0;
+    }
+
+    .hero {
+      position: relative;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 0 48px 60px;
+      overflow: hidden;
+    }
+
+    .hero-reel {
+      position: absolute;
+      inset: 0;
+      background: #111;
+      overflow: hidden;
+    }
+
+    .hero-reel iframe,
+    .hero-reel video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.7;
+    }
+
+    .hero-reel-placeholder {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #111 0%, #1a1a1a 50%, #0d0d0d 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .reel-placeholder-inner {
+      text-align: center;
+      color: rgba(255,255,255,0.15);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+
+    .reel-placeholder-inner .play-icon {
+      width: 64px;
+      height: 64px;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+    }
+
+    .reel-placeholder-inner .play-icon svg {
+      width: 20px;
+      height: 20px;
+      fill: rgba(255,255,255,0.15);
+      margin-left: 3px;
+    }
+
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.1) 50%, transparent 100%);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-tag {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 20px;
+    }
+
+    .hero-title {
+      font-size: clamp(56px, 8vw, 110px);
+      font-weight: 800;
+      color: #fff;
+      line-height: 0.92;
+      letter-spacing: -0.02em;
+      margin-bottom: 32px;
+    }
+
+    .hero-title span {
+      display: block;
+    }
+
+    .hero-title .thin {
+      font-weight: 400;
+      font-style: italic;
+    }
+
+    .hero-meta {
+      display: flex;
+      align-items: center;
+      gap: 48px;
+    }
+
+    .hero-desc {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: rgba(255,255,255,0.5);
+      letter-spacing: 0.05em;
+      max-width: 300px;
+      line-height: 1.7;
+    }
+
+    .hero-scroll {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-left: auto;
+    }
+
+    .scroll-line {
+      width: 40px;
+      height: 1px;
+      background: rgba(255,255,255,0.2);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .scroll-line::after {
+      content: '';
+      position: absolute;
+      left: -100%;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255,255,255,0.6);
+      animation: scrollLine 2s ease infinite;
+    }
+
+    @keyframes scrollLine {
+      0% { left: -100%; }
+      100% { left: 100%; }
+    }
+
+
+    .cinematic-diary .diary-intro {
+      margin-bottom: 24px;
+    }
+
+    .diary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 3px;
+    }
+
+    .diary-thumb {
+      position: relative;
+      display: block;
+      overflow: hidden;
+      aspect-ratio: 16/9;
+      background: #111;
+    }
+
+    .diary-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.4s ease, filter 0.3s ease;
+      filter: grayscale(20%);
+    }
+
+    .diary-thumb:hover img {
+      transform: scale(1.04);
+      filter: grayscale(0%);
+    }
+
+    .diary-play {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0);
+      transition: background 0.3s;
+    }
+
+    .diary-thumb:hover .diary-play {
+      background: rgba(0,0,0,0.3);
+    }
+
+    .diary-play svg {
+      width: 36px;
+      height: 36px;
+      fill: #fff;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .diary-thumb:hover .diary-play svg {
+      opacity: 1;
+    }
+
+    @media (max-width: 768px) {
+      .diary-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    /* TRUSTED BY */
+    .trusted-by {
+      padding: 48px 48px;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 48px;
+    }
+
+    .trusted-label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .trusted-logos {
+      display: flex;
+      align-items: center;
+      gap: 48px;
+      flex-wrap: wrap;
+    }
+
+    .trusted-logo-text {
+      font-family: var(--font-display);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--fg);
+      opacity: 0.4;
+      transition: opacity 0.2s;
+      white-space: nowrap;
+    }
+
+    .trusted-logo-text:hover { opacity: 1; }
+
+    .dj-expand {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease, padding 0.3s ease;
+      padding: 0 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .dj-expand.open {
+      max-height: 120px;
+      padding: 16px 0 24px;
+    }
+
+    .dj-text {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.9;
+      max-width: 480px;
+    }
+
+    #dj-item.open .service-num::after {
+      content: ' ↑';
+    }
+
+    /* HOME INTRO SECTION */
+    .home-intro {
+      padding: 120px 48px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: start;
+    }
+
+    .intro-label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 28px;
+    }
+
+    .intro-statement {
+      font-size: clamp(28px, 3.5vw, 44px);
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+    }
+
+    .intro-statement em {
+      font-style: italic;
+      font-weight: 400;
+      color: var(--muted);
+    }
+
+    .intro-portrait {
+      margin-top: 40px;
+      width: 100%;
+      max-width: 320px;
+      overflow: hidden;
+    }
+
+    .intro-portrait img {
+      width: 100%;
+      display: block;
+      filter: grayscale(20%);
+      transition: filter 0.4s;
+    }
+
+    .intro-portrait img:hover {
+      filter: grayscale(0%);
+    }
+
+    .intro-right {
+      padding-top: 48px;
+    }
+
+    .intro-bio {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.9;
+      margin-bottom: 48px;
+    }
+
+    .intro-services {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .service-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 0;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .service-item:hover .service-name {
+      transform: translateX(8px);
+    }
+
+    .service-name {
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      transition: transform 0.2s;
+    }
+
+    .service-num {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+    }
+
+    /* SELECTED WORK */
+    .selected-work {
+      padding: 80px 48px 120px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 60px;
+    }
+
+    .section-title {
+      font-size: clamp(32px, 4vw, 52px);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .section-link {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      cursor: pointer;
+      transition: color 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-link:hover { color: var(--fg); }
+
+    .section-link::after {
+      content: '→';
+      transition: transform 0.2s;
+    }
+
+    .section-link:hover::after { transform: translateX(4px); }
+
+    .work-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+    }
+
+    .work-item {
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      background: #e8e7e4;
+    }
+
+    .work-item:first-child {
+      grid-column: 1 / -1;
+    }
+
+    .work-thumb {
+      width: 100%;
+      aspect-ratio: 16/9;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.6s ease, filter 0.4s ease;
+      filter: grayscale(20%);
+    }
+
+    .work-item:first-child .work-thumb {
+      aspect-ratio: 21/9;
+    }
+
+    .work-thumb-placeholder {
+      width: 100%;
+      aspect-ratio: 16/9;
+      background: linear-gradient(135deg, #ddd 0%, #e8e8e8 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .work-item:first-child .work-thumb-placeholder {
+      aspect-ratio: 21/9;
+    }
+
+    .work-thumb-placeholder span {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #aaa;
+    }
+
+    .work-item:hover .work-thumb {
+      transform: scale(1.04);
+      filter: grayscale(0%);
+    }
+
+    .work-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 60%);
+      opacity: 0;
+      transition: opacity 0.4s;
+      display: flex;
+      align-items: flex-end;
+      padding: 28px;
+    }
+
+    .work-item:hover .work-overlay { opacity: 1; }
+
+    .work-info h3 {
+      font-size: 18px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+
+    .work-info p {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: rgba(255,255,255,0.6);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    /* ================================
+       MOTION DESIGN PAGE
+    ================================ */
+    .page-hero {
+      padding: 160px 48px 80px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .page-hero-tag {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 24px;
+    }
+
+    .page-hero-title {
+      font-size: clamp(48px, 7vw, 96px);
+      font-weight: 800;
+      line-height: 0.95;
+      letter-spacing: -0.03em;
+      margin-bottom: 32px;
+    }
+
+    .page-hero-desc {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--muted);
+      max-width: 480px;
+      line-height: 1.8;
+    }
+
+    .projects-grid {
+      padding: 80px 48px;
+    }
+
+    .project-row {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 0;
+      border-top: 1px solid var(--border);
+      padding: 48px 0;
+      align-items: start;
+    }
+
+    .project-row:last-child {
+      border-bottom: 1px solid var(--border);
+    }
+
+    .project-meta {
+      padding-right: 40px;
+    }
+
+    .project-num {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      color: var(--muted);
+      margin-bottom: 20px;
+    }
+
+    .project-name {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      margin-bottom: 12px;
+    }
+
+    .project-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .tag {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      padding: 5px 10px;
+      border-radius: 2px;
+    }
+
+    .project-content {
+      position: relative;
+    }
+
+    .project-video-wrapper {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16/9;
+      background: #111;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+
+    .project-video-wrapper iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .project-video-placeholder {
+      width: 100%;
+      aspect-ratio: 16/9;
+      background: linear-gradient(135deg, #1a1a1a 0%, #222 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      cursor: pointer;
+    }
+
+    .project-video-placeholder .play-btn {
+      width: 52px;
+      height: 52px;
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .project-video-placeholder:hover .play-btn {
+      border-color: rgba(255,255,255,0.5);
+      transform: scale(1.1);
+    }
+
+    .project-video-placeholder .play-btn svg {
+      width: 16px;
+      height: 16px;
+      fill: rgba(255,255,255,0.6);
+      margin-left: 3px;
+    }
+
+    .project-video-placeholder span {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.2);
+    }
+
+    .project-desc {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    /* ================================
+       CONTACT PAGE
+    ================================ */
+    #contact {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 160px 48px 80px;
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 120px;
+      align-items: start;
+    }
+
+    .contact-left .contact-label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 32px;
+    }
+
+    .contact-headline {
+      font-size: clamp(40px, 5vw, 72px);
+      font-weight: 800;
+      line-height: 1.0;
+      letter-spacing: -0.03em;
+      margin-bottom: 40px;
+    }
+
+    .contact-headline em {
+      font-style: italic;
+      font-weight: 400;
+      color: var(--muted);
+    }
+
+    .contact-email-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--fg);
+      text-decoration: none;
+      border-bottom: 1px solid var(--fg);
+      padding-bottom: 4px;
+      transition: gap 0.2s;
+    }
+
+    .contact-email-link:hover { gap: 20px; }
+
+    .contact-right {
+      padding-top: 8px;
+    }
+
+    .contact-form {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .form-field {
+      border-bottom: 1px solid var(--border);
+      padding: 20px 0;
+      transition: border-color 0.2s;
+    }
+
+    .form-field:focus-within {
+      border-color: var(--fg);
+    }
+
+    .form-field label {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .form-field input,
+    .form-field textarea {
+      width: 100%;
+      background: none;
+      border: none;
+      outline: none;
+      font-family: var(--font-display);
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--fg);
+      resize: none;
+    }
+
+    .form-field textarea {
+      min-height: 80px;
+    }
+
+    .form-field input::placeholder,
+    .form-field textarea::placeholder {
+      color: var(--border);
+    }
+
+    .form-submit {
+      margin-top: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .btn-submit {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      background: var(--fg);
+      color: #fff;
+      font-family: var(--font-display);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 16px 32px;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s, gap 0.2s;
+    }
+
+    .btn-submit:hover {
+      background: #222;
+      gap: 20px;
+    }
+
+    .btn-submit span { font-size: 16px; }
+
+    .contact-socials {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 60px;
+    }
+
+    .contact-socials a {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .contact-socials a::before {
+      content: '↗';
+      font-size: 13px;
+    }
+
+    .contact-socials a:hover { color: var(--fg); }
+
+    /* FOOTER */
+    footer {
+      padding: 40px 48px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .footer-copy {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    .footer-loc {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    /* TRANSITIONS */
+    .page {
+      animation: fadeIn 0.4s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* SCROLLBAR */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      nav { padding: 20px 24px; }
+      nav::after { left: 24px; right: 24px; }
+      .nav-links { gap: 20px; }
+      .hero { padding: 0 24px 40px; }
+      .hero-title { font-size: 48px; }
+      .home-intro { grid-template-columns: 1fr; padding: 80px 24px; gap: 48px; }
+      .selected-work { padding: 60px 24px; }
+      .work-grid { grid-template-columns: 1fr; }
+      .work-item:first-child { grid-column: 1; }
+      .page-hero { padding: 120px 24px 60px; }
+      .projects-grid { padding: 40px 24px; }
+      .project-row { grid-template-columns: 1fr; }
+      .contact-grid { grid-template-columns: 1fr; gap: 60px; }
+      #contact { padding: 120px 24px 60px; }
+      footer { padding: 28px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <nav>
+    <a class="nav-logo" onclick="showPage('home')">kiady.xyz</a>
+    <ul class="nav-links">
+      <li><a onclick="showPage('motion')" id="nav-motion">Motion Design</a></li>
+      <li><a onclick="showPage('shooting')" id="nav-shooting">Videography</a></li>
+      <li><a onclick="showPage('contact')" id="nav-contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- ======================== HOME ======================== -->
+  <div id="home" class="page active">
+
+    <section class="hero">
+      <div class="hero-reel">
+        <!-- REPLACE: swap placeholder div below with your Vimeo iframe -->
+        <!-- Example: <iframe src="https://player.vimeo.com/video/YOUR_ID?autoplay=1&muted=1&loop=1&background=1" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe> -->
+<iframe src="https://player.vimeo.com/video/1189600447?autoplay=1&muted=1&loop=1&background=1" frameborder="0" allow="autoplay; fullscreen" style="position:absolute;top:0;left:0;width:100%;height:100%;"></iframe>
+      </div>
+      <div class="hero-overlay"></div>
+      <div class="hero-content">
+        <p class="hero-tag">Melbourne · 3D · Motion Design · Videography</p>
+        <h1 class="hero-title">
+          <span>Creative</span>
+          <span class="thin">in motion.</span>
+        </h1>
+        <div class="hero-meta">
+          <p class="hero-desc">Motion designer & filmmaker based in Melbourne.</p>
+          <div class="hero-scroll">
+            <div class="scroll-line"></div>
+            Scroll
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="trusted-by">
+      <p class="trusted-label">Trusted by</p>
+      <div class="trusted-logos">
+        <span class="trusted-logo-text">Givenchy</span>
+        <span class="trusted-logo-text">L'Oréal</span>
+        <span class="trusted-logo-text">LVMH</span>
+        <span class="trusted-logo-text">Universal Music</span>
+        <span class="trusted-logo-text">Stake</span>
+        <span class="trusted-logo-text">Kick</span>
+      </div>
+    </section>
+
+    <section class="home-intro">
+      <div>
+        <p class="intro-label">About</p>
+        <h2 class="intro-statement">
+          I make things move.<br>
+          <em>And make moments last.</em>
+        </h2>
+        <div class="intro-portrait">
+          <img src="images/ktrzr-pp.png" alt="Kiady">
+        </div>
+      </div>
+      <div class="intro-right">
+        <p class="intro-bio">
+          Hi, I'm Kiady. Motion designer with a focus on 3D and brand animation, filmmaker with a cinematic eye. I work at the intersection of precision and feeling — whether it's a product reel or an aftermovie, the result has to land.
+        </p>
+        <div class="intro-services">
+          <div class="service-item" onclick="showPage('motion')">
+            <span class="service-name">Motion Design & 3D</span>
+            <span class="service-num">01</span>
+          </div>
+          <div class="service-item" onclick="showPage('shooting')">
+            <span class="service-name">Videography</span>
+            <span class="service-num">02</span>
+          </div>
+          <div class="service-item" onclick="toggleDJ()" id="dj-item">
+            <span class="service-name">DJ</span>
+            <span class="service-num">03</span>
+          </div>
+          <div class="dj-expand" id="dj-expand">
+            <p class="dj-text">10 years behind the decks. From Paris to Melbourne — hip-hop, afro-caribbean sounds, R&B and future beats. Music is where the creativity starts — everything else follows the rhythm.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <span class="footer-copy">© 2022 Kiady.xyz</span>
+      <span class="footer-loc">Melbourne, AU</span>
+    </footer>
+
+  </div>
+
+  <!-- ======================== MOTION DESIGN ======================== -->
+  <div id="motion" class="page">
+
+    <section class="page-hero">
+      <p class="page-hero-tag">02 — Motion Design</p>
+      <h1 class="page-hero-title">Motion<br>Design</h1>
+      <p class="page-hero-desc">3D animation, brand films, product reels. Built in Cinema 4D + Redshift, finished in After Effects.</p>
+    </section>
+
+    <div class="projects-grid">
+
+      <div class="project-row">
+        <div class="project-meta">
+          <p class="project-num">001</p>
+          <h2 class="project-name">Givenchy — Chinese New Year 2025</h2>
+          <div class="project-tags">
+            <span class="tag">Client Work</span><span class="tag">3D</span><span class="tag">Cinema 4D</span><span class="tag">Octane Render</span><span class="tag">After Effects</span>
+          </div>
+        </div>
+        <div class="project-content">
+          <div class="project-video-wrapper"><iframe src="https://player.vimeo.com/video/1084832923" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe></div>
+          <p class="project-desc">Campaign animation for Givenchy's Chinese New Year 2025. Full 3D product and environment design built around the brand's luxury visual identity.</p>
+        </div>
+      </div>
+
+      <div class="project-row">
+        <div class="project-meta">
+          <p class="project-num">002</p>
+          <h2 class="project-name">Cinematic Diary</h2>
+          <div class="project-tags">
+            <span class="tag">Personal</span>
+            <span class="tag">Cinematic</span>
+            <span class="tag">DaVinci Resolve</span>
+          </div>
+        </div>
+        <div class="project-content cinematic-diary">
+          <p class="project-desc diary-intro">An ongoing series of cinematic moments captured between projects. Melbourne, Sydney, wherever life lands.</p>
+          <div class="diary-grid">
+            <a class="diary-thumb" href="https://youtu.be/Mvnd7BPjCpI" target="_blank" rel="noopener"><img src="https://img.youtube.com/vi/Mvnd7BPjCpI/maxresdefault.jpg" alt="Melbourne I" loading="lazy"><div class="diary-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></a>
+            <a class="diary-thumb" href="https://youtu.be/MSmC2A5KYh0" target="_blank" rel="noopener"><img src="https://img.youtube.com/vi/MSmC2A5KYh0/maxresdefault.jpg" alt="Melbourne II" loading="lazy"><div class="diary-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></a>
+            <a class="diary-thumb" href="https://youtu.be/zmIwF2rryjI" target="_blank" rel="noopener"><img src="https://img.youtube.com/vi/zmIwF2rryjI/maxresdefault.jpg" alt="III" loading="lazy"><div class="diary-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></a>
+            <a class="diary-thumb" href="https://youtu.be/mfPrTj7RKCg" target="_blank" rel="noopener"><img src="https://img.youtube.com/vi/mfPrTj7RKCg/maxresdefault.jpg" alt="IV" loading="lazy"><div class="diary-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></a>
+            <a class="diary-thumb" href="https://youtu.be/nfFoEIZa6R8" target="_blank" rel="noopener"><img src="https://img.youtube.com/vi/nfFoEIZa6R8/maxresdefault.jpg" alt="V" loading="lazy"><div class="diary-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></a>
+            <a class="diary-thumb" href="https://youtu.be/yYI51HcJ710" target="_blank" rel="noopener"><img src="https://img.youtube.com/vi/yYI51HcJ710/maxresdefault.jpg" alt="VI" loading="lazy"><div class="diary-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></a>
+            <a class="diary-thumb" href="https://youtu.be/PC9Ccm26KR4" target="_blank" rel="noopener"><img src="https://img.youtube.com/vi/PC9Ccm26KR4/maxresdefault.jpg" alt="Bondi Beach" loading="lazy"><div class="diary-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></a>
+          </div>
+        </div>
+      </div>
+
+    <footer>
+      <span class="footer-copy">© 2026 Kiady</span>
+      <span class="footer-loc">Melbourne, AU</span>
+    </footer>
+
+  </div>
+
+  <!-- ======================== VIDEOGRAPHY ======================== -->
+  <div id="shooting" class="page">
+
+    <section class="page-hero">
+      <p class="page-hero-tag">03 — Videography</p>
+      <h1 class="page-hero-title">Video&shy;graphy</h1>
+      <p class="page-hero-desc">Event aftermovies, cinematic street content. Event aftermovies and cinematic street content, graded in DaVinci Resolve.</p>
+    </section>
+
+    <div class="projects-grid">
+
+      <div class="project-row">
+        <div class="project-meta">
+          <p class="project-num">001</p>
+          <h2 class="project-name">Kapwa Party — Aftermovie</h2>
+          <div class="project-tags">
+            <span class="tag">Aftermovie</span><span class="tag">Event</span><span class="tag">DaVinci Resolve</span>
+          </div>
+        </div>
+        <div class="project-content">
+          <div class="project-video-wrapper"><iframe src="https://player.vimeo.com/video/1189615009" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe></div>
+          <p class="project-desc">Aftermovie for Kapwa Party, Melbourne. Captured the atmosphere, the crowd, the energy — edited to match the music and the night's identity.</p>
+        </div>
+      </div>
+
+      <div class="project-row">
+        <div class="project-meta">
+          <p class="project-num">002</p>
+          <h2 class="project-name">Cinematic Diary</h2>
+          <div class="project-tags">
+            <span class="tag">Personal</span>
+            <span class="tag">Cinematic</span>
+            <span class="tag">DaVinci Resolve</span>
+          </div>
+        </div>
+        <div class="project-content cinematic-diary">
+          <p class="project-desc diary-intro">An ongoing series of cinematic moments captured between projects. Melbourne, Sydney, wherever life lands.</p>
+          <div class="diary-grid">
+            <a class="diary-thumb" href="https://youtu.be/Mvnd7BPjCpI" target="_blank" rel="noopener"><img src="https://img.youtube.com/vi/Mvnd7BPjCpI/maxresdefault.jpg" alt="Melbourne I" loading="lazy"><div class="diary-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></a>
+            <a class="diary-thumb" href="https://youtu.be/MSmC2A5KYh0" target="_blank" rel="noopener"><img src="https://img.youtube.com/vi/MSmC2A5KYh0/maxresdefault.jpg" alt="Melbourne II" loading="lazy"><div class="diary-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></a>
+            <a class="diary-thumb" href="https://youtu.be/zmIwF2rryjI" target="_blank" rel="noopener"><img src="https://img.youtube.com/vi/zmIwF2rryjI/maxresdefault.jpg" alt="III" loading="lazy"><div class="diary-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></a>
+            <a class="diary-thumb" href="https://youtu.be/mfPrTj7RKCg" target="_blank" rel="noopener"><img src="https://img.youtube.com/vi/mfPrTj7RKCg/maxresdefault.jpg" alt="IV" loading="lazy"><div class="diary-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></a>
+            <a class="diary-thumb" href="https://youtu.be/nfFoEIZa6R8" target="_blank" rel="noopener"><img src="https://img.youtube.com/vi/nfFoEIZa6R8/maxresdefault.jpg" alt="V" loading="lazy"><div class="diary-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></a>
+            <a class="diary-thumb" href="https://youtu.be/yYI51HcJ710" target="_blank" rel="noopener"><img src="https://img.youtube.com/vi/yYI51HcJ710/maxresdefault.jpg" alt="VI" loading="lazy"><div class="diary-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></a>
+            <a class="diary-thumb" href="https://youtu.be/PC9Ccm26KR4" target="_blank" rel="noopener"><img src="https://img.youtube.com/vi/PC9Ccm26KR4/maxresdefault.jpg" alt="Bondi Beach" loading="lazy"><div class="diary-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <span class="footer-copy">© 2026 Kiady</span>
+      <span class="footer-loc">Melbourne, AU</span>
+    </footer>
+
+  </div>
+
+  <!-- ======================== CONTACT ======================== -->
+  <div id="contact" class="page">
+
+    <div class="contact-grid">
+      <div class="contact-left">
+        <p class="contact-label">Contact</p>
+        <h1 class="contact-headline">
+          Let's make<br>
+          <em>something.</em>
+        </h1>
+        <a href="mailto:ktrzr.contact@gmail.com" class="contact-email-link">
+          ktrzr.contact@gmail.com →
+        </a>
+        <div class="contact-socials">
+          <a href="https://instagram.com/kiady.xyz" target="_blank">Instagram</a>
+        </div>
+      </div>
+      <div class="contact-right">
+        <form class="contact-form" action="https://formspree.io/f/mlgznwkp" method="POST" onsubmit="handleSubmit(event)">
+          <div class="form-field">
+            <label>Name</label>
+            <input type="text" placeholder="Your name" required>
+          </div>
+          <div class="form-field">
+            <label>Email</label>
+            <input type="email" placeholder="your@email.com" required>
+          </div>
+          <div class="form-field">
+            <label>Project</label>
+            <input type="text" placeholder="What are you working on?">
+          </div>
+          <div class="form-field">
+            <label>Message</label>
+            <textarea placeholder="Tell me more..."></textarea>
+          </div>
+          <div class="form-submit">
+            <button type="submit" class="btn-submit">Send it <span>→</span></button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <footer style="margin-top:80px">
+      <span class="footer-copy">© 2022 Kiady.xyz</span>
+      <span class="footer-loc">Melbourne, AU</span>
+    </footer>
+
+  </div>
+
+  <script>
+    function toggleDJ() {
+      const expand = document.getElementById('dj-expand');
+      const item = document.getElementById('dj-item');
+      expand.classList.toggle('open');
+      item.classList.toggle('open');
+    }
+
+    // Init nav state
+    document.querySelector('nav').classList.add('on-hero');
+
+    window.addEventListener('scroll', () => {
+      const hero = document.querySelector('.hero');
+      const nav = document.querySelector('nav');
+      if (!hero) return;
+      const heroBottom = hero.getBoundingClientRect().bottom;
+      if (document.getElementById('home').classList.contains('active') && heroBottom > 80) {
+        nav.classList.add('on-hero');
+      } else {
+        nav.classList.remove('on-hero');
+      }
+    });
+
+    // CURSOR
+    const cursor = document.getElementById('cursor');
+    const ring = document.getElementById('cursorRing');
+    let mx = 0, my = 0, rx = 0, ry = 0;
+
+    document.addEventListener('mousemove', e => {
+      mx = e.clientX; my = e.clientY;
+      cursor.style.left = mx + 'px';
+      cursor.style.top = my + 'px';
+    });
+
+    function animateRing() {
+      rx += (mx - rx) * 0.12;
+      ry += (my - ry) * 0.12;
+      ring.style.left = rx + 'px';
+      ring.style.top = ry + 'px';
+      requestAnimationFrame(animateRing);
+    }
+    animateRing();
+
+    document.querySelectorAll('a, button, .work-item, .service-item, .nav-logo, .project-video-placeholder').forEach(el => {
+      el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
+      el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
+    });
+
+    // PAGE ROUTING
+    function showPage(id) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      const navEl = document.getElementById('nav-' + id);
+      if (navEl) navEl.classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      const nav = document.querySelector('nav');
+      if (id === 'home') {
+        nav.classList.add('on-hero');
+      } else {
+        nav.classList.remove('on-hero');
+      }
+    }
+
+    // FORM
+    function handleSubmit(e) {
+      e.preventDefault();
+      const form = e.target;
+      const btn = form.querySelector('.btn-submit');
+      btn.innerHTML = 'Sending... <span>→</span>';
+      btn.disabled = true;
+
+      fetch(form.action, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: { 'Accept': 'application/json' }
+      }).then(res => {
+        if (res.ok) {
+          btn.innerHTML = 'Sent ✓';
+          btn.style.background = '#2a2a2a';
+          form.reset();
+          setTimeout(() => {
+            btn.innerHTML = 'Send it <span>→</span>';
+            btn.style.background = '';
+            btn.disabled = false;
+          }, 3000);
+        } else {
+          btn.innerHTML = 'Error — try again';
+          btn.disabled = false;
+        }
+      }).catch(() => {
+        btn.innerHTML = 'Error — try again';
+        btn.disabled = false;
+      });
+    }
+  </script>
+
+</body>
+</html>
