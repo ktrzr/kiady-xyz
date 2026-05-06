@@ -1358,19 +1358,19 @@
         <form class="contact-form" action="https://formspree.io/f/mlgznwkp" method="POST" onsubmit="handleSubmit(event)">
           <div class="form-field">
             <label>Name</label>
-            <input type="text" placeholder="Your name" required>
+            <input type="text" name="name" placeholder="Your name" required>
           </div>
           <div class="form-field">
             <label>Email</label>
-            <input type="email" placeholder="your@email.com" required>
+            <input type="email" name="email" placeholder="your@email.com" required>
           </div>
           <div class="form-field">
             <label>Project</label>
-            <input type="text" placeholder="What are you working on?">
+            <input type="text" name="project" placeholder="What are you working on?">
           </div>
           <div class="form-field">
             <label>Message</label>
-            <textarea placeholder="Tell me more..."></textarea>
+            <textarea name="message" placeholder="Tell me more..."></textarea>
           </div>
           <div class="form-submit">
             <button type="submit" class="btn-submit">Send it <span>→</span></button>
@@ -1471,12 +1471,14 @@
       btn.innerHTML = 'Sending... <span>→</span>';
       btn.disabled = true;
 
-      fetch(form.action, {
+      const data = new FormData(form);
+
+      fetch('https://formspree.io/f/mlgznwkp', {
         method: 'POST',
-        body: new FormData(form),
+        body: data,
         headers: { 'Accept': 'application/json' }
-      }).then(res => {
-        if (res.ok) {
+      }).then(res => res.json()).then(data => {
+        if (data.ok) {
           btn.innerHTML = 'Sent ✓';
           btn.style.background = '#2a2a2a';
           form.reset();
@@ -1486,7 +1488,8 @@
             btn.disabled = false;
           }, 3000);
         } else {
-          btn.innerHTML = 'Error — try again';
+          const error = data.errors ? data.errors.map(e => e.message).join(', ') : 'Error — try again';
+          btn.innerHTML = error;
           btn.disabled = false;
         }
       }).catch(() => {
