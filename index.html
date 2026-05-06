@@ -301,16 +301,60 @@
 
     .diary-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 4px;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 3px;
     }
 
-    .diary-item .project-video-wrapper {
-      margin-bottom: 0;
+    .diary-thumb {
+      position: relative;
+      display: block;
+      overflow: hidden;
+      aspect-ratio: 16/9;
+      background: #111;
+    }
+
+    .diary-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.4s ease, filter 0.3s ease;
+      filter: grayscale(20%);
+    }
+
+    .diary-thumb:hover img {
+      transform: scale(1.04);
+      filter: grayscale(0%);
+    }
+
+    .diary-play {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0);
+      transition: background 0.3s;
+    }
+
+    .diary-thumb:hover .diary-play {
+      background: rgba(0,0,0,0.3);
+    }
+
+    .diary-play svg {
+      width: 36px;
+      height: 36px;
+      fill: #fff;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .diary-thumb:hover .diary-play svg {
+      opacity: 1;
     }
 
     @media (max-width: 768px) {
-      .diary-grid { grid-template-columns: 1fr; }
+      .diary-grid { grid-template-columns: repeat(2, 1fr); }
     }
 
     /* TRUSTED BY */
@@ -1102,143 +1146,26 @@
       <div class="project-row">
         <div class="project-meta">
           <p class="project-num">002</p>
-          <h2 class="project-name">Hublot Big Bang Integrated Titanium</h2>
+          <h2 class="project-name">Cinematic Diary</h2>
           <div class="project-tags">
-            <span class="tag">Exploration</span><span class="tag">3D</span><span class="tag">Cinema 4D</span><span class="tag">Redshift</span><span class="tag">After Effects</span>
+            <span class="tag">Personal</span>
+            <span class="tag">Cinematic</span>
+            <span class="tag">DaVinci Resolve</span>
           </div>
         </div>
-        <div class="project-content">
-          <div class="project-video-wrapper"><iframe src="https://player.vimeo.com/video/1087070369" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe></div>
-          <p class="project-desc">Personal exploration around one of Hublot's most iconic references. Focused on material fidelity — titanium textures, bracelet links, sapphire crystal.</p>
-        </div>
-      </div>
-
-      <div class="project-row">
-        <div class="project-meta">
-          <p class="project-num">003</p>
-          <h2 class="project-name">Beats Solo 4</h2>
-          <div class="project-tags">
-            <span class="tag">Exploration</span><span class="tag">3D</span><span class="tag">Cinema 4D</span><span class="tag">Octane Render</span><span class="tag">After Effects</span>
+        <div class="project-content cinematic-diary">
+          <p class="project-desc diary-intro">An ongoing series of cinematic moments captured between projects. Melbourne, Sydney, wherever life lands.</p>
+          <div class="diary-grid">
+            <a class="diary-thumb" href="https://youtu.be/Mvnd7BPjCpI" target="_blank" rel="noopener"><img src="https://img.youtube.com/vi/Mvnd7BPjCpI/maxresdefault.jpg" alt="Melbourne I" loading="lazy"><div class="diary-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></a>
+            <a class="diary-thumb" href="https://youtu.be/MSmC2A5KYh0" target="_blank" rel="noopener"><img src="https://img.youtube.com/vi/MSmC2A5KYh0/maxresdefault.jpg" alt="Melbourne II" loading="lazy"><div class="diary-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></a>
+            <a class="diary-thumb" href="https://youtu.be/zmIwF2rryjI" target="_blank" rel="noopener"><img src="https://img.youtube.com/vi/zmIwF2rryjI/maxresdefault.jpg" alt="III" loading="lazy"><div class="diary-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></a>
+            <a class="diary-thumb" href="https://youtu.be/mfPrTj7RKCg" target="_blank" rel="noopener"><img src="https://img.youtube.com/vi/mfPrTj7RKCg/maxresdefault.jpg" alt="IV" loading="lazy"><div class="diary-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></a>
+            <a class="diary-thumb" href="https://youtu.be/nfFoEIZa6R8" target="_blank" rel="noopener"><img src="https://img.youtube.com/vi/nfFoEIZa6R8/maxresdefault.jpg" alt="V" loading="lazy"><div class="diary-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></a>
+            <a class="diary-thumb" href="https://youtu.be/yYI51HcJ710" target="_blank" rel="noopener"><img src="https://img.youtube.com/vi/yYI51HcJ710/maxresdefault.jpg" alt="VI" loading="lazy"><div class="diary-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></a>
+            <a class="diary-thumb" href="https://youtu.be/PC9Ccm26KR4" target="_blank" rel="noopener"><img src="https://img.youtube.com/vi/PC9Ccm26KR4/maxresdefault.jpg" alt="Bondi Beach" loading="lazy"><div class="diary-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></a>
           </div>
         </div>
-        <div class="project-content">
-          <div class="project-video-wrapper"><iframe src="https://player.vimeo.com/video/942037984" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe></div>
-          <p class="project-desc">Product exploration for the Beats Solo 4. Clean geometry, soft lighting, minimal composition — letting the object speak.</p>
-        </div>
       </div>
-
-      <div class="project-row">
-        <div class="project-meta">
-          <p class="project-num">004</p>
-          <h2 class="project-name">SHOEI</h2>
-          <div class="project-tags">
-            <span class="tag">Exploration</span><span class="tag">3D</span><span class="tag">Cinema 4D</span><span class="tag">Redshift</span><span class="tag">After Effects</span>
-          </div>
-        </div>
-        <div class="project-content">
-          <div class="project-video-wrapper"><iframe src="https://player.vimeo.com/video/1094211332" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe></div>
-          <p class="project-desc">Personal exploration on the SHOEI helmet. Hard surface modeling with cinematic lighting and dynamic camera work.</p>
-        </div>
-      </div>
-
-      <div class="project-row">
-        <div class="project-meta">
-          <p class="project-num">005</p>
-          <h2 class="project-name">SMA Inverter</h2>
-          <div class="project-tags">
-            <span class="tag">Client Work</span><span class="tag">3D</span><span class="tag">Explainer</span><span class="tag">Cinema 4D</span><span class="tag">Redshift</span><span class="tag">After Effects</span>
-          </div>
-        </div>
-        <div class="project-content">
-          <div class="project-video-wrapper"><iframe src="https://player.vimeo.com/video/1086249160" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe></div>
-          <p class="project-desc">Explainer video produced via Chocolate Studios for an international renewable energy conference. 3D product visualization of SMA's latest inverter technology.</p>
-        </div>
-      </div>
-
-      <div class="project-row">
-        <div class="project-meta">
-          <p class="project-num">006</p>
-          <h2 class="project-name">Moncler × Palm Angels</h2>
-          <div class="project-tags">
-            <span class="tag">Exploration</span><span class="tag">3D</span><span class="tag">Cinema 4D</span><span class="tag">Octane Render</span><span class="tag">After Effects</span>
-          </div>
-        </div>
-        <div class="project-content">
-          <div class="project-video-wrapper"><iframe src="https://player.vimeo.com/video/1086240383" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe></div>
-          <p class="project-desc">Personal exploration around the Moncler x Palm Angels collaboration. Bold composition, high-contrast lighting, fashion-forward energy.</p>
-        </div>
-      </div>
-
-      <div class="project-row">
-        <div class="project-meta">
-          <p class="project-num">007</p>
-          <h2 class="project-name">Samsung Galaxy Flip 5</h2>
-          <div class="project-tags">
-            <span class="tag">Exploration</span><span class="tag">3D</span><span class="tag">Cinema 4D</span><span class="tag">Octane Render</span><span class="tag">After Effects</span>
-          </div>
-        </div>
-        <div class="project-content">
-          <div class="project-video-wrapper"><iframe src="https://player.vimeo.com/video/942755869" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe></div>
-          <p class="project-desc">Exploration around Samsung's foldable form factor. Focused on the mechanical hinge animation and reflective surfaces under studio lighting.</p>
-        </div>
-      </div>
-
-      <div class="project-row">
-        <div class="project-meta">
-          <p class="project-num">008</p>
-          <h2 class="project-name">Mercedes-Benz G Class</h2>
-          <div class="project-tags">
-            <span class="tag">Exploration</span><span class="tag">3D</span><span class="tag">Cinema 4D</span><span class="tag">Redshift</span><span class="tag">After Effects</span>
-          </div>
-        </div>
-        <div class="project-content">
-          <div class="project-video-wrapper"><iframe src="https://player.vimeo.com/video/942745436" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe></div>
-          <p class="project-desc">Personal exploration on one of the most iconic silhouettes in automotive design. Dramatic lighting, detailed geometry, cinematic framing.</p>
-        </div>
-      </div>
-
-      <div class="project-row">
-        <div class="project-meta">
-          <p class="project-num">009</p>
-          <h2 class="project-name">Chicken Game — Stake Originals</h2>
-          <div class="project-tags">
-            <span class="tag">Client Work</span><span class="tag">3D</span><span class="tag">Cinema 4D</span><span class="tag">Redshift</span><span class="tag">After Effects</span>
-          </div>
-        </div>
-        <div class="project-content">
-          <div class="project-video-wrapper"><iframe src="https://player.vimeo.com/video/1189614030" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe></div>
-          <p class="project-desc">Promotional animation for Stake's original game Chicken Game. High-energy 3D visuals built to match the brand's bold visual language.</p>
-        </div>
-      </div>
-
-      <div class="project-row">
-        <div class="project-meta">
-          <p class="project-num">010</p>
-          <h2 class="project-name">NBA Playoffs — Stake</h2>
-          <div class="project-tags">
-            <span class="tag">Client Work</span><span class="tag">3D</span><span class="tag">Cinema 4D</span><span class="tag">Redshift</span><span class="tag">After Effects</span>
-          </div>
-        </div>
-        <div class="project-content">
-          <div class="project-video-wrapper"><iframe src="https://player.vimeo.com/video/1189614406" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe></div>
-          <p class="project-desc">Full 3D promotional video for the NBA Playoffs partnership with Stake. Produced in a day and a half — tight deadline, high output.</p>
-        </div>
-      </div>
-
-      <div class="project-row">
-        <div class="project-meta">
-          <p class="project-num">011</p>
-          <h2 class="project-name">Easygo 3D Billboard</h2>
-          <div class="project-tags">
-            <span class="tag">Client Work</span><span class="tag">3D</span><span class="tag">Cinema 4D</span><span class="tag">Redshift</span><span class="tag">After Effects</span>
-          </div>
-        </div>
-        <div class="project-content">
-          <div class="project-video-wrapper"><iframe src="https://player.vimeo.com/video/1189614836" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe></div>
-          <p class="project-desc">3D billboard concept for Easygo. Designed for large-format display with bold typography and dynamic 3D elements.</p>
-        </div>
-      </div>
-    </div>
 
     <footer>
       <span class="footer-copy">© 2026 Kiady</span>
